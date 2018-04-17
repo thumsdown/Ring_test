@@ -65,14 +65,17 @@ static void system_idle( state_machine_t *sm, system_input input )
     {
         case SYSTEM_INPUT_BAT_LEVEL_LOW:
             sm->cur_state = system_suspend;
+            notify_current_state(SYSTEM_STATE_SUSPEND);
             break;
         case SYSTEM_INPUT_BAT_LEVEL_UP:
             sm->cur_state = system_resume;
+            notify_current_state(SYSTEM_STATE_RESUME);
             break;
         case SYSTEM_INPUT_BUTTON_PRESSED:
             if( sm->cur_state == system_resume )
             {
                 sm->cur_state = system_busy;
+             notify_current_state(SYSTEM_STATE_RESUME);
             }
             else
             {
@@ -94,9 +97,11 @@ static void system_resume( state_machine_t *sm, system_input input )
     {
         case SYSTEM_INPUT_BAT_LEVEL_LOW:
             sm->cur_state = system_suspend;
+            notify_current_state(SYSTEM_STATE_SUSPEND);
             break;
         case SYSTEM_INPUT_BUTTON_PRESSED:
             sm->cur_state = system_busy;
+            notify_current_state(SYSTEM_STATE_BUSY);
             break;
         case SYSTEM_INPUT_BAT_LEVEL_UP:
         case SYSTEM_INPUT_BUTTON_RELEASED:
@@ -114,6 +119,7 @@ static void system_suspend( state_machine_t *sm, system_input input )
     {
         case SYSTEM_INPUT_BAT_LEVEL_UP:
             sm->cur_state = system_resume;
+            notify_current_state(SYSTEM_STATE_RESUME);
             break;
         case SYSTEM_INPUT_BAT_LEVEL_LOW:
         case SYSTEM_INPUT_BUTTON_PRESSED:
@@ -132,12 +138,15 @@ static void system_busy( state_machine_t *sm, system_input input )
     {
         case SYSTEM_INPUT_BAT_LEVEL_LOW:
             sm->cur_state = system_suspend;
+            notify_current_state(SYSTEM_STATE_SUSPEND);
             break;
         case SYSTEM_INPUT_BUTTON_PRESSED:
             sm->cur_state = system_connected;
+            notify_current_state(SYSTEM_STATE_CONNECTED);
             break;
         case SYSTEM_INPUT_BUTTON_RELEASED:
             sm->cur_state = system_disconnected;
+            notify_current_state(SYSTEM_STATE_DISCONNECTED);
         case SYSTEM_INPUT_BAT_LEVEL_UP:
         default:
             notify_invalid_input( input );
@@ -153,9 +162,11 @@ static void system_connected ( state_machine_t *sm, system_input input )
     {
         case SYSTEM_INPUT_BAT_LEVEL_LOW:
             sm->cur_state = system_busy;
+            notify_current_state(SYSTEM_STATE_BUSY);
             break;
         case SYSTEM_INPUT_BUTTON_RELEASED:
             sm->cur_state = system_busy;
+            notify_current_state(SYSTEM_STATE_BUSY);
             break;
         case SYSTEM_INPUT_BAT_LEVEL_UP:
         case SYSTEM_INPUT_BUTTON_PRESSED:
@@ -173,12 +184,15 @@ static void system_disconnected( state_machine_t *sm, system_input input )
     {
         case SYSTEM_INPUT_BAT_LEVEL_LOW:
             sm->cur_state = system_suspend;
+            notify_current_state(SYSTEM_STATE_SUSPEND);
             break;
         case SYSTEM_INPUT_BUTTON_PRESSED:
             sm->cur_state = system_connected;
+            notify_current_state(SYSTEM_STATE_CONNECTED);
             break;
         case SYSTEM_INPUT_BUTTON_RELEASED:
             sm->cur_state = system_resume;
+            notify_current_state(SYSTEM_STATE_RESUME);
         case SYSTEM_INPUT_BAT_LEVEL_UP:        
         default:
             notify_invalid_input( input );
