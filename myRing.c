@@ -75,7 +75,7 @@ static void system_idle( state_machine_t *sm, system_input input )
             if( sm->cur_state == system_resume )
             {
                 sm->cur_state = system_busy;
-             notify_current_state(SYSTEM_STATE_RESUME);
+             notify_current_state(SYSTEM_STATE_BUSY);
             }
             else
             {

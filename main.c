@@ -5,10 +5,11 @@
 static void show_user_options( void )
 {
     /** get user input */
-    DBG_MSG( "Enter a  for Charge Complete event- System Charged\n" );
-    DBG_MSG( "Enter b  for System power low event - System Discharged\n" );
+    DBG_MSG( "Enter a  for Charge Complete event\n" );
+    DBG_MSG( "Enter b  for System power low event\n" );
     DBG_MSG( "Enter c  for Button Press Action\n" );
     DBG_MSG( "Enter d  for Button release Action\n" );
+    DBG_MSG( "Enter e for exiting the machine\n");
 }
 
 static system_input system_event_to_machine_input( char event )
@@ -66,7 +67,11 @@ int main( int argc, char* argv[] )
         show_user_options();
 
         event = getchar();
-
+        if ( event == 'e' )
+        {
+            DBG_MSG("GOOD BYE! HAVE A NICE DAY!!");
+            break;
+        }
         /** Translate Event into a valid input */
         input = system_event_to_machine_input( event );
         if( input == SYSTEM_INPUT_MAX )
