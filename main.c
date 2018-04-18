@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <myRing.h>
 
 
@@ -65,21 +66,22 @@ int main( int argc, char* argv[] )
     while( 1 )
     {
         show_user_options();
-
+        while (( event = getchar()) != '\n' && event != EOF );
+        DBG_MSG("Enter choice:");
         event = getchar();
         if ( event == 'e' )
         {
-            DBG_MSG("GOOD BYE! HAVE A NICE DAY!!");
+            DBG_MSG("GOOD BYE! HAVE A NICE DAY!!\n");
             break;
         }
         /** Translate Event into a valid input */
         input = system_event_to_machine_input( event );
         if( input == SYSTEM_INPUT_MAX )
         {
+            DBG_MSG("Continue\n");
             continue;
         }
         machine_state_transit( machine, input );
-        while( '\n' != getchar() );
     }
 
     return SYS_SUCCESS;
